@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,18 +13,20 @@
         android:layout_height="wrap_content"
         android:text="@string/default_text"
         android:textSize="@dimen/title_text_height"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:maxLength="30"
-       />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button1"
+        />
 
-    <TextView
-        android:id="@+id/editext1"
+    <Button
+        android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/random_text"
-        android:layout_toStartOf="@id/textView1"
-        android:layout_above="@id/textView1"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.286" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
