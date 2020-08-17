@@ -2,4 +2,5 @@
     <string name="app_name">AD 340 by David</string>
     <string name="default_text">Hello World from David the goat 😎😎😎😎🥱 :)</string>
     <string name="random_text">Some random text</string>
+    <string name="incorrectZipCodeValueError">Please enter a valid zip code</string>
 </resources>
