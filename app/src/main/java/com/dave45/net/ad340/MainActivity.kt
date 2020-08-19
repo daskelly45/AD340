@@ -16,16 +16,13 @@ class MainActivity : AppCompatActivity() {
 
     //endregion Properties
 
-    // region Setup methods
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val zipcodeEditText: EditText = findViewById(R.id.zipcodeEditText)
-//        val locationIcon: ImageView = findViewById(R.id.locationIcon)
-//        val titleTextView: TextView = findViewById(R.id.titleTextView)
         zipcodeEditText.text.insert(0, List(5) { Random.nextInt(0,9) }.joinToString(""))
+
 
         val enterButton: Button = findViewById(R.id.enterButton)
         enterButton.setOnClickListener {
@@ -34,7 +31,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, R.string.zipcode_entry_error, Toast.LENGTH_SHORT).show()
             else
                 forecastRepository.loadForecast(zipCode)
-                //Toast.makeText(this, "Zip code : \"$zipCode\"", Toast.LENGTH_SHORT).show()
         }
 
         val forecastList: RecyclerView = findViewById(R.id.forecastList)
@@ -52,5 +48,4 @@ class MainActivity : AppCompatActivity() {
 
         forecastRepository.weeklyForecast.observe(this, weeklyForecastObserver)
     }
-
 }
