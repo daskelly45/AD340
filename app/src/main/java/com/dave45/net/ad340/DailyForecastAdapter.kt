@@ -9,23 +9,22 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 
-class DailyForecastViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class DailyForecastViewHolder(
+    view: View,
+    private val tempDisplaySettingManager: TempDisplaySettingManager
+) : RecyclerView.ViewHolder(view) {
 
-    private val tempText: TextView = view.findViewById(R.id.tempText)
-    private val descriptionText: TextView = view.findViewById(R.id.descriptionText)
+    private val tempText: TextView = view.findViewById(R.id.temp_text)
+    private val descriptionText: TextView = view.findViewById(R.id.description_text)
 
     fun bind(dailyForecast: DailyForecast) {
-        tempText.text = String.format("%.2f", dailyForecast.temp).run {
-            if(length == 4)
-                "0$this"
-            else
-                this
-        }
+        tempText.text = formatTempForDisplay(dailyForecast.temp, tempDisplaySettingManager.getTempDisplaySetting())
         descriptionText.text = dailyForecast.description
     }
 }
 
 class DailyForecastAdapter(
+    private val tempDisplaySettingManager: TempDisplaySettingManager,
     private val clickHandler: (DailyForecast) -> Unit
 ): ListAdapter<DailyForecast, DailyForecastViewHolder>(DIFF_CONFIG) {
 
@@ -42,7 +41,7 @@ class DailyForecastAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyForecastViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_daily_forecast, parent, false)
-        return DailyForecastViewHolder(itemView)
+        return DailyForecastViewHolder(itemView, tempDisplaySettingManager)
     }
 
     override fun onBindViewHolder(holder: DailyForecastViewHolder, position: Int) {
@@ -50,9 +49,3 @@ class DailyForecastAdapter(
         holder.itemView.setOnClickListener { clickHandler(getItem(position)) }
     }
 }
-
-//fun <T> DiffUtil.Companion.defaultItemCallback(): DiffUtil.ItemCallback<T> = object : DiffUtil.ItemCallback<T>() {
-//    override fun areItemsTheSame(oldItem: T, newItem: T): Boolean = oldItem === newItem
-//
-//    override fun areContentsTheSame(oldItem: T, newItem: T): Boolean = oldItem == newItem
-//}
