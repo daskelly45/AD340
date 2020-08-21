@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <fragment
+        android:id="@+id/locationEntryFragment"
+        android:name="com.dave45.net.ad340.location.LocationEntryFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent=".3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_location_entry" />
+
     <ImageView
         android:id="@+id/locationIcon"
         android:layout_width="@dimen/icon_size"
@@ -29,14 +40,15 @@
         android:id="@+id/zipcodeEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
         android:hint="Enter your zip code"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.458"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35000002" />
+        app:layout_constraintTop_toBottomOf="@+id/locationEntryFragment"
+        app:layout_constraintVertical_bias="0.14" />
 
     <Button
         android:id="@+id/enterButton"
