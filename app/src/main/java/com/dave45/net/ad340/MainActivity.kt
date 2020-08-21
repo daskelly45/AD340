@@ -15,7 +15,7 @@ import com.dave45.net.ad340.details.ForecastDetailsActivity
 import com.dave45.net.ad340.location.LocationEntryFragment
 import kotlin.random.Random
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AppNavigator {
     // region Properties
 
     var times = 0
@@ -28,19 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         tempDisplaySettingManager = TempDisplaySettingManager(this)
-
-        val zipcodeEditText: EditText = findViewById(R.id.zipcodeEditText)
-        zipcodeEditText.text.insert(0, List(5) { Random.nextInt(0,9) }.joinToString(""))
-
-
-        val enterButton: Button = findViewById(R.id.enterButton)
-        enterButton.setOnClickListener {
-            val zipCode = zipcodeEditText.text.toString()
-            if(zipCode.length != 5)
-                Toast.makeText(this, R.string.zipcode_entry_error, Toast.LENGTH_SHORT).show()
-            else
-                forecastRepository.loadForecast(zipCode)
-        }
 
         val forecastList: RecyclerView = findViewById(R.id.forecastList)
         forecastList.layoutManager = LinearLayoutManager(this)
@@ -62,13 +49,6 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun showForecastDetails(forecast: DailyForecast) {
-        val forecastDetailsIntent = Intent(this, ForecastDetailsActivity::class.java)
-        forecastDetailsIntent.putExtra("key_temp", forecast.temp)
-        forecastDetailsIntent.putExtra("key_description", forecast.description)
-        startActivity(forecastDetailsIntent)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.settings_menu, menu)
@@ -83,5 +63,16 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun navigateToCurrentForecast(zipCode: String) {
+        forecastRepository.loadForecast(zipCode)
+    }
+
+    private fun showForecastDetails(forecast: DailyForecast) {
+        val forecastDetailsIntent = Intent(this, ForecastDetailsActivity::class.java)
+        forecastDetailsIntent.putExtra("key_temp", forecast.temp)
+        forecastDetailsIntent.putExtra("key_description", forecast.description)
+        startActivity(forecastDetailsIntent)
     }
 }
