@@ -12,14 +12,15 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dave45.net.ad340.details.ForecastDetailsActivity
+import com.dave45.net.ad340.forecast.CurrentForecastFragment
 import com.dave45.net.ad340.location.LocationEntryFragment
+import kotlinx.android.synthetic.main.fragment_location_entry.*
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity(), AppNavigator {
     // region Properties
 
     var times = 0
-    private val forecastRepository = ForecastRepository()
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
 
     //endregion Properties
@@ -27,21 +28,8 @@ class MainActivity : AppCompatActivity(), AppNavigator {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         tempDisplaySettingManager = TempDisplaySettingManager(this)
-
-        val forecastList: RecyclerView = findViewById(R.id.forecastList)
-        forecastList.layoutManager = LinearLayoutManager(this)
-        val dailyForecastAdapter = DailyForecastAdapter(tempDisplaySettingManager) { forecastItem ->
-            showForecastDetails(forecastItem)
-        }
-        forecastList.adapter = dailyForecastAdapter
-
-        val weeklyForecastObserver = Observer<DailyForecasts> { forecastItems ->
-            //update our list adapter
-            dailyForecastAdapter.submitList(forecastItems)
-        }
-
-        forecastRepository.weeklyForecast.observe(this, weeklyForecastObserver)
 
         supportFragmentManager
             .beginTransaction()
@@ -66,13 +54,17 @@ class MainActivity : AppCompatActivity(), AppNavigator {
     }
 
     override fun navigateToCurrentForecast(zipCode: String) {
-        forecastRepository.loadForecast(zipCode)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, CurrentForecastFragment.newInstance(zipCode))
+            .commit()
     }
 
-    private fun showForecastDetails(forecast: DailyForecast) {
-        val forecastDetailsIntent = Intent(this, ForecastDetailsActivity::class.java)
-        forecastDetailsIntent.putExtra("key_temp", forecast.temp)
-        forecastDetailsIntent.putExtra("key_description", forecast.description)
-        startActivity(forecastDetailsIntent)
+    override fun navigateToLocationEntry() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, LocationEntryFragment())
+            .commit()
     }
+
 }
