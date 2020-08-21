@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.root, LocationEntryFragment())
+            .add(R.id.fragmentContainer, LocationEntryFragment())
             .commit()
     }
 
