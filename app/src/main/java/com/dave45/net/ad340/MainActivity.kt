@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dave45.net.ad340.details.ForecastDetailsActivity
+import com.dave45.net.ad340.location.LocationEntryFragment
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
@@ -54,6 +55,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         forecastRepository.weeklyForecast.observe(this, weeklyForecastObserver)
+
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.root, LocationEntryFragment())
+            .commit()
     }
 
     private fun showForecastDetails(forecast: DailyForecast) {
