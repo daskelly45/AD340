@@ -10,7 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.dave45.net.ad340.forecast.CurrentForecastFragmentDirections
-import com.dave45.net.ad340.location.LocationEntryFragmentDirections
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), AppNavigator {
     // region Properties
@@ -25,9 +25,12 @@ class MainActivity : AppCompatActivity(), AppNavigator {
         setContentView(R.layout.activity_main)
 
         tempDisplaySettingManager = TempDisplaySettingManager(this)
+
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(navController.graph)
-        findViewById<Toolbar>(R.id.toolbar).setupWithNavController(navController, appBarConfiguration)
+        findViewById<Toolbar>(R.id.toolbar).setTitle(R.string.app_name)//setupWithNavController(navController, appBarConfiguration)
+
+        findViewById<BottomNavigationView>(R.id.bottomNavigationView).setupWithNavController(navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,8 +50,8 @@ class MainActivity : AppCompatActivity(), AppNavigator {
     }
 
     override fun navigateToCurrentForecast(zipCode: String) {
-        val action = LocationEntryFragmentDirections.actionLocationEntryFragmentToCurrentForecastFragment2()
-        findNavController(R.id.nav_host_fragment).navigate(action)
+//        val action = LocationEntryFragmentDirections.actionLocationEntryFragmentToCurrentForecastFragment2()
+//        findNavController(R.id.nav_host_fragment).navigate(action)
     }
 
     override fun navigateToLocationEntry() {

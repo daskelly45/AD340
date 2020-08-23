@@ -9,11 +9,7 @@
         android:id="@+id/locationEntryFragment"
         android:name="com.dave45.net.ad340.location.LocationEntryFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_location_entry" >
-        <action
-            android:id="@+id/action_locationEntryFragment_to_currentForecastFragment2"
-            app:destination="@id/currentForecastFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_location_entry" />
     <fragment
         android:id="@+id/currentForecastFragment"
         android:name="com.dave45.net.ad340.forecast.CurrentForecastFragment"
@@ -37,5 +33,17 @@
         <argument
             android:name="description"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/weeklyForecastFragment"
+        android:name="com.dave45.net.ad340.forecast.WeeklyForecastFragment"
+        android:label="WeeklyForecastFragment"
+        tools:layout="@layout/fragment_weekly_forecast" >
+        <action
+            android:id="@+id/action_weeklyForecastFragment_to_forecastDetailsFragment"
+            app:destination="@id/forecastDetailsFragment" />
+        <action
+            android:id="@+id/action_weeklyForecastFragment_to_locationEntryFragment"
+            app:destination="@id/locationEntryFragment" />
     </fragment>
 </navigation>
