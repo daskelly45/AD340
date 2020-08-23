@@ -1,21 +1,14 @@
 package com.dave45.net.ad340
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.*
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.dave45.net.ad340.details.ForecastDetailsActivity
-import com.dave45.net.ad340.forecast.CurrentForecastFragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import com.dave45.net.ad340.forecast.CurrentForecastFragmentDirections
 import com.dave45.net.ad340.location.LocationEntryFragment
-import kotlinx.android.synthetic.main.fragment_location_entry.*
-import kotlin.random.Random
+import com.dave45.net.ad340.location.LocationEntryFragmentDirections
 
 class MainActivity : AppCompatActivity(), AppNavigator {
     // region Properties
@@ -49,17 +42,13 @@ class MainActivity : AppCompatActivity(), AppNavigator {
     }
 
     override fun navigateToCurrentForecast(zipCode: String) {
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragmentContainer, CurrentForecastFragment.newInstance(zipCode))
-//            .commit()
+        val action = LocationEntryFragmentDirections.actionLocationEntryFragmentToCurrentForecastFragment2()
+        findNavController(R.id.nav_host_fragment).navigate(action)
     }
 
     override fun navigateToLocationEntry() {
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragmentContainer, LocationEntryFragment())
-//            .commit()
+        val action = CurrentForecastFragmentDirections.actionCurrentForecastFragmentToLocationEntryFragment()
+        findNavController(R.id.nav_host_fragment).navigate(action)
     }
 
 }
