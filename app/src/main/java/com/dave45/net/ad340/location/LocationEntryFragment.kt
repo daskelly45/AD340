@@ -35,13 +35,13 @@ class LocationEntryFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_location_entry, container, false)
 
         //update UI and get references
-        val zipcodeEditText: EditText = view.findViewById(R.id.zipcodeEditText)
-        zipcodeEditText.text.insert(0, List(5) { Random.nextInt(0,9) }.joinToString(""))
+        val zipCodeEditText: EditText = view.findViewById(R.id.zipcodeEditText)
+        zipCodeEditText.text.insert(0, List(5) { Random.nextInt(0,9) }.joinToString(""))
 
 
         val enterButton: Button = view.findViewById(R.id.enterButton)
         enterButton.setOnClickListener {
-            val zipCode = zipcodeEditText.text.toString()
+            val zipCode = zipCodeEditText.text.toString()
             if(zipCode.length != 5)
                 Toast.makeText(requireContext(), R.string.zipcode_entry_error, Toast.LENGTH_SHORT).show()
             else
