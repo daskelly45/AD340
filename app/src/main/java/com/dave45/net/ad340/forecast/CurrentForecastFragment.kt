@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dave45.net.ad340.*
-import com.dave45.net.ad340.details.ForecastDetailsActivity
+import com.dave45.net.ad340.details.ForecastDetailsFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /**
@@ -67,10 +67,7 @@ class CurrentForecastFragment : Fragment() {
 
 
     private fun showForecastDetails(forecast: DailyForecast) {
-        val forecastDetailsIntent = Intent(requireContext(), ForecastDetailsActivity::class.java)
-        forecastDetailsIntent.putExtra("key_temp", forecast.temp)
-        forecastDetailsIntent.putExtra("key_description", forecast.description)
-        startActivity(forecastDetailsIntent)
+        appNavigator.navigateToForecastDetails(forecast)
     }
 
     companion object {

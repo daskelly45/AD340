@@ -4,4 +4,6 @@ interface AppNavigator {
     fun navigateToCurrentForecast(zipCode: String)
 
     fun navigateToLocationEntry()
+
+    fun navigateToForecastDetails(forecast: DailyForecast)
 }
