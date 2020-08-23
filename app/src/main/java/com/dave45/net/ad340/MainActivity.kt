@@ -9,10 +9,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.dave45.net.ad340.forecast.CurrentForecastFragmentDirections
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity(), AppNavigator {
+class MainActivity : AppCompatActivity() {
     // region Properties
 
     var times = 0
@@ -48,20 +47,4 @@ class MainActivity : AppCompatActivity(), AppNavigator {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-    override fun navigateToCurrentForecast(zipCode: String) {
-//        val action = LocationEntryFragmentDirections.actionLocationEntryFragmentToCurrentForecastFragment2()
-//        findNavController(R.id.nav_host_fragment).navigate(action)
-    }
-
-    override fun navigateToLocationEntry() {
-        val action = CurrentForecastFragmentDirections.actionCurrentForecastFragmentToLocationEntryFragment()
-        findNavController(R.id.nav_host_fragment).navigate(action)
-    }
-
-    override fun navigateToForecastDetails(forecast: DailyForecast) {
-        val action = CurrentForecastFragmentDirections.actionCurrentForecastFragmentToForecastDetailsFragment(forecast.temp, forecast.description)
-        findNavController(R.id.nav_host_fragment).navigate(action)
-    }
-
 }
