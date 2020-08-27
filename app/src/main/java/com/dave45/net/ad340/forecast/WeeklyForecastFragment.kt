@@ -8,9 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.dave45.net.ad340.*
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.dave45.net.ad340.databinding.FragmentWeeklyForecastBinding
 
 /**
  * A simple [Fragment] subclass.
@@ -22,6 +21,7 @@ class WeeklyForecastFragment : Fragment() {
     private val forecastRepository = ForecastRepository()
     private lateinit var locationRepository: LocationRepository
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
+    private lateinit var binding: FragmentWeeklyForecastBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,14 +33,15 @@ class WeeklyForecastFragment : Fragment() {
         val zipCode = arguments?.getString(CurrentForecastFragment.KEY_ZIPCODE) ?: ""
 
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_weekly_forecast, container, false)
+//        val view = inflater.inflate(R.layout.fragment_weekly_forecast, container, false)
+        binding = FragmentWeeklyForecastBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
-        locationEntryButton.setOnClickListener {
+        binding.locationEntryButton.setOnClickListener {
             showLocationEntry()
         }
 
-        val forecastList: RecyclerView = view.findViewById(R.id.forecastList)
+        val forecastList = binding.forecastList
         forecastList.layoutManager = LinearLayoutManager(requireContext())
         val dailyForecastAdapter = DailyForecastAdapter(tempDisplaySettingManager) { forecastItem ->
             showForecastDetails(forecastItem)
@@ -52,7 +53,7 @@ class WeeklyForecastFragment : Fragment() {
             dailyForecastAdapter.submitList(forecastItems)
         }
 
-        forecastRepository.weeklyForecast.observe(this, weeklyForecastObserver)
+        forecastRepository.weeklyForecast.observe(viewLifecycleOwner, weeklyForecastObserver)
 
         locationRepository = LocationRepository(requireContext())
         val savedLocationObserver = Observer<Location> { savedLocation ->

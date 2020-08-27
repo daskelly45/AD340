@@ -1,33 +1,33 @@
 package com.dave45.net.ad340.details
 
 import android.os.Bundle
-import android.view.*
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.dave45.net.ad340.*
+import com.dave45.net.ad340.TempDisplaySettingManager
+import com.dave45.net.ad340.databinding.FragmentForecastDetailsBinding
+import com.dave45.net.ad340.formatTempForDisplay
 
 class ForecastDetailsFragment : Fragment() {
 
     private val args: ForecastDetailsFragmentArgs by navArgs()
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
+    private lateinit var binding: FragmentForecastDetailsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val layout = inflater.inflate(R.layout.fragment_forecast_details, container, false)
+        binding = FragmentForecastDetailsBinding.inflate(inflater, container, false)
 
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
-        val tempText: TextView = layout.findViewById(R.id.temp_text)
-        val descriptionText: TextView = layout.findViewById(R.id.description_text)
+        binding.tempText.text = formatTempForDisplay(args.temp, tempDisplaySettingManager.getTempDisplaySetting())
+        binding.descriptionText.text = args.description
 
-        tempText.text = formatTempForDisplay(args.temp, tempDisplaySettingManager.getTempDisplaySetting())
-        descriptionText.text = args.description
-
-        return layout
+        return binding.root
     }
 }

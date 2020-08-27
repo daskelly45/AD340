@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.dave45.net.ad340.*
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.dave45.net.ad340.api.CurrentWeather
+import com.dave45.net.ad340.databinding.FragmentCurrentForecastBinding
 
 /**
  * A simple [Fragment] subclass.
@@ -22,6 +21,7 @@ class CurrentForecastFragment : Fragment() {
     private val forecastRepository = ForecastRepository()
     private lateinit var locationRepository: LocationRepository
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
+    private lateinit var binding: FragmentCurrentForecastBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,26 +33,21 @@ class CurrentForecastFragment : Fragment() {
         val zipCode = arguments?.getString(KEY_ZIPCODE) ?: ""
 
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
+//        val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
+        binding = FragmentCurrentForecastBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
-        locationEntryButton.setOnClickListener {
+        binding.locationEntryButton.setOnClickListener {
             showLocationEntry()
         }
 
-        val forecastList: RecyclerView = view.findViewById(R.id.forecastList)
-        forecastList.layoutManager = LinearLayoutManager(requireContext())
-        val dailyForecastAdapter = DailyForecastAdapter(tempDisplaySettingManager) { forecastItem ->
-            showForecastDetails(forecastItem)
-        }
-        forecastList.adapter = dailyForecastAdapter
-
-        val currentForecastObserver = Observer<DailyForecast> { forecastItem ->
+        val currentWeatherObserver = Observer<CurrentWeather> { weather ->
             // update list adapter
-            dailyForecastAdapter.submitList(listOf(forecastItem))
+            binding.locationName.text = weather.name
+            binding.tempText.text = formatTempForDisplay(weather.forecast.temp, tempDisplaySettingManager.getTempDisplaySetting())
         }
 
-        forecastRepository.currentForecast.observe(viewLifecycleOwner, currentForecastObserver)
+        forecastRepository.currentWeather.observe(viewLifecycleOwner, currentWeatherObserver)
 
         locationRepository = LocationRepository(requireContext())
         val savedLocationObserver = Observer<Location> { savedLocation ->
