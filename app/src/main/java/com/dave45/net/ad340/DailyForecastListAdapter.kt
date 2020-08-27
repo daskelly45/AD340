@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.dave45.net.ad340.api.DailyForecast
 import com.dave45.net.ad340.databinding.ItemDailyForecastBinding
 import java.text.SimpleDateFormat
@@ -25,10 +26,13 @@ class DailyForecastViewHolder(
         binding.tempText.text = formatTempForDisplay(dailyForecast.temp.max, tempDisplaySettingManager.getTempDisplaySetting())
         binding.descriptionText.text = dailyForecast.weather.first().description
         binding.dateText.text = DATE_FORMAT.format(Date(dailyForecast.date * 1000))
+
+        val iconId = dailyForecast.weather.first().icon
+        binding.forecastIcon.load("http://openweathermap.org/img/wn/${iconId}@2x.png")
     }
 }
 
-class DailyForecastAdapter(
+class DailyForecastListAdapter(
     private val tempDisplaySettingManager: TempDisplaySettingManager,
     private val clickHandler: (DailyForecast) -> Unit
 ): ListAdapter<DailyForecast, DailyForecastViewHolder>(DIFF_CONFIG) {

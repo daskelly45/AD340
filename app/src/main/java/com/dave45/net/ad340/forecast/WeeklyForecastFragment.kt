@@ -42,7 +42,7 @@ class WeeklyForecastFragment : Fragment() {
 
         val forecastList = binding.forecastList
         forecastList.layoutManager = LinearLayoutManager(requireContext())
-        val dailyForecastAdapter = DailyForecastAdapter(tempDisplaySettingManager) { forecastItem ->
+        val dailyForecastAdapter = DailyForecastListAdapter(tempDisplaySettingManager) { forecastItem ->
             showForecastDetails(forecastItem)
         }
         forecastList.adapter = dailyForecastAdapter
