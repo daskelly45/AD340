@@ -2,19 +2,31 @@ package com.dave45.net.ad340
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.util.*
 import kotlin.random.Random
 
 class ForecastRepository {
 
+    private val _currentForecast = MutableLiveData<DailyForecast>()
+    val currentForecast: LiveData<DailyForecast> = _currentForecast
+
     private val  _weeklyForecast = MutableLiveData<List<DailyForecast>>()
     val weeklyForecast: LiveData<List<DailyForecast>> = _weeklyForecast
 
-    fun loadForecast(zipCode: String) {
-        val randomValues = List(10) { Random.nextFloat().rem(100) * 100 }
-        val forecastItems = randomValues.map { temp ->
-            DailyForecast(temp, getItemDescription(temp))
-        }
-        _weeklyForecast.value = forecastItems
+    fun loadWeeklyForecast(zipCode: String) {
+//        val randomValues = List(10) { Random.nextFloat().rem(100) * 100 }
+//        val forecastItems = randomValues.map { temp ->
+//            DailyForecast(temp, getItemDescription(temp))
+//        }
+//        _weeklyForecast.value = forecastItems
+
+        val date = Date()
+
+        _weeklyForecast.value = List(10) { randomForecast(date) }
+    }
+
+    fun loadCurrentForecast(zipCode: String) {
+        _currentForecast.value = randomForecast()
     }
 
     private fun getItemDescription(temp: Float): String {
@@ -28,6 +40,15 @@ class ForecastRepository {
             in 90f..100f -> "Where's the A/C?"
             in 100f..Float.MAX_VALUE -> "What is this, Arizona ?"
             else -> "Does not compute"
+
         }
+    }
+
+    private fun randomTemp() = Random.nextFloat().rem(100) * 100
+
+    private fun randomForecast(date: Date = Date()): DailyForecast {
+        val temp = randomTemp()
+        val description = getItemDescription(temp)
+        return DailyForecast(date, temp, description)
     }
 }

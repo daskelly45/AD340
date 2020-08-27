@@ -9,6 +9,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.dave45.net.ad340.Location
+import com.dave45.net.ad340.LocationRepository
 import com.dave45.net.ad340.R
 import kotlin.random.Random
 
@@ -18,10 +20,14 @@ import kotlin.random.Random
  */
 class LocationEntryFragment : Fragment() {
 
+    private lateinit var locationRepository: LocationRepository
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        locationRepository = LocationRepository(requireContext())
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_location_entry, container, false)
 
@@ -35,8 +41,11 @@ class LocationEntryFragment : Fragment() {
             val zipCode = zipCodeEditText.text.toString()
             if(zipCode.length != 5)
                 Toast.makeText(requireContext(), R.string.zipcode_entry_error, Toast.LENGTH_SHORT).show()
-            else
+            else {
+                locationRepository.saveLocation(Location.ZipCode(zipCode))
+                // basically shows the forecast list fragment or whatever fragment is preceding this current one
                 findNavController().navigateUp()
+            }
 //                appNavigator.navigateToCurrentForecast(zipCode)
         }
 
