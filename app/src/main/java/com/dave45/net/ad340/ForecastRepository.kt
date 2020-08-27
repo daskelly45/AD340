@@ -4,11 +4,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dave45.net.ad340.api.CurrentWeather
+import com.dave45.net.ad340.api.WeeklyForecast
 import com.dave45.net.ad340.api.createOpenWeatherMapService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 import kotlin.random.Random
 
 class ForecastRepository {
@@ -16,19 +16,53 @@ class ForecastRepository {
     private val _currentWeather = MutableLiveData<CurrentWeather>()
     val currentWeather: LiveData<CurrentWeather> = _currentWeather
 
-    private val  _weeklyForecast = MutableLiveData<List<DailyForecast>>()
-    val weeklyForecast: LiveData<List<DailyForecast>> = _weeklyForecast
+    private val  _weeklyForecast = MutableLiveData<WeeklyForecast>()
+    val weeklyForecast: LiveData<WeeklyForecast> = _weeklyForecast
 
     fun loadWeeklyForecast(zipCode: String) {
-//        val randomValues = List(10) { Random.nextFloat().rem(100) * 100 }
-//        val forecastItems = randomValues.map { temp ->
-//            DailyForecast(temp, getItemDescription(temp))
-//        }
-//        _weeklyForecast.value = forecastItems
+        val call = createOpenWeatherMapService().currentWeather(zipCode, "imperial", BuildConfig.OPEN_WEATHER_MAP_API_KEY)
+        call.enqueue(object : Callback<CurrentWeather> {
+            override fun onResponse(
+                call: Call<CurrentWeather>,
+                response: Response<CurrentWeather>
+            ) {
+                val weatherResponse = response.body()
+                if (weatherResponse != null) {
+                    // load 7 day forecast
+                    val forecastCall = createOpenWeatherMapService().sevenDayForecast(
+                        lat = weatherResponse.coord.lat,
+                        lon = weatherResponse.coord.long,
+                        exclude = "current,minutely,hourly",
+                        units = "imperial",
+                        apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY
+                    )
 
-        val date = Date()
+                    forecastCall.enqueue(object : Callback<WeeklyForecast> {
+                        override fun onResponse(
+                            call: Call<WeeklyForecast>,
+                            response: Response<WeeklyForecast>
+                        ) {
+                            val weeklyForecastResponse = response.body()
+                            if(weeklyForecastResponse != null) {
+                                _weeklyForecast.value = weeklyForecastResponse
+                            }
+                        }
 
-        _weeklyForecast.value = List(10) { randomForecast(date) }
+                        override fun onFailure(call: Call<WeeklyForecast>, t: Throwable) {
+                            Log.e(ForecastRepository::class.java.simpleName, "Error loading weekly forecast", t)
+                        }
+                    })
+                }
+            }
+
+            override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
+                Log.e(
+                    ForecastRepository::class.java.simpleName,
+                    "Error loading location for weekly forecast",
+                    t
+                )
+            }
+        })
     }
 
     fun loadCurrentForecast(zipCode: String) {
@@ -46,7 +80,6 @@ class ForecastRepository {
             override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
                 Log.e(ForecastRepository::class.java.simpleName, "Error loading current weather", t)
             }
-
         })
     }
 
@@ -67,9 +100,9 @@ class ForecastRepository {
 
     private fun randomTemp() = Random.nextFloat().rem(100) * 100
 
-    private fun randomForecast(date: Date = Date()): DailyForecast {
-        val temp = randomTemp()
-        val description = getItemDescription(temp)
-        return DailyForecast(date, temp, description)
-    }
+//    private fun randomForecast(date: Date = Date()): DailyForecast {
+//        val temps = List(2) { randomTemp() }.sortedDescending()
+//        val description = getItemDescription(temps.first())
+//        return DailyForecast(date.time, Temp(temps.last(), temps.first()), description)
+//    }
 }

@@ -3,23 +3,28 @@ package com.dave45.net.ad340
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.dave45.net.ad340.api.DailyForecast
+import com.dave45.net.ad340.databinding.ItemDailyForecastBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
+
+private val DATE_FORMAT = SimpleDateFormat("MM-dd-yyyy")
 
 class DailyForecastViewHolder(
     view: View,
     private val tempDisplaySettingManager: TempDisplaySettingManager
 ) : RecyclerView.ViewHolder(view) {
 
-    private val tempText: TextView = view.findViewById(R.id.temp_text)
-    private val descriptionText: TextView = view.findViewById(R.id.description_text)
+    private val binding = ItemDailyForecastBinding.bind(view)
 
     fun bind(dailyForecast: DailyForecast) {
-        tempText.text = formatTempForDisplay(dailyForecast.temp, tempDisplaySettingManager.getTempDisplaySetting())
-        descriptionText.text = dailyForecast.description
+        binding.tempText.text = formatTempForDisplay(dailyForecast.temp.max, tempDisplaySettingManager.getTempDisplaySetting())
+        binding.descriptionText.text = dailyForecast.weather.first().description
+        binding.dateText.text = DATE_FORMAT.format(Date(dailyForecast.date * 1000))
     }
 }
 
@@ -40,7 +45,8 @@ class DailyForecastAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyForecastViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_daily_forecast, parent, false)
+        val itemView = ItemDailyForecastBinding.inflate(LayoutInflater.from(parent.context), parent, false).root
+//            LayoutInflater.from(parent.context).inflate(R.layout.item_daily_forecast, parent, false)
         return DailyForecastViewHolder(itemView, tempDisplaySettingManager)
     }
 

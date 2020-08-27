@@ -29,13 +29,11 @@ class CurrentForecastFragment : Fragment() {
     ): View? {
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
-        //val zipCode = arguments!!.getString(KEY_ZIPCODE) ?: ""
         val zipCode = arguments?.getString(KEY_ZIPCODE) ?: ""
 
         // Inflate the layout for this fragment
 //        val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
         binding = FragmentCurrentForecastBinding.inflate(inflater, container, false)
-        val view = binding.root
 
         binding.locationEntryButton.setOnClickListener {
             showLocationEntry()
@@ -57,16 +55,11 @@ class CurrentForecastFragment : Fragment() {
         }
         locationRepository.savedLocation.observe(viewLifecycleOwner, savedLocationObserver)
 
-        return view
+        return binding.root
     }
 
     private fun showLocationEntry() {
         val action = CurrentForecastFragmentDirections.actionCurrentForecastFragmentToLocationEntryFragment()
-        findNavController().navigate(action)
-    }
-
-    private fun showForecastDetails(forecast: DailyForecast) {
-        val action = CurrentForecastFragmentDirections.actionCurrentForecastFragmentToForecastDetailsFragment(forecast.temp, forecast.description)
         findNavController().navigate(action)
     }
 

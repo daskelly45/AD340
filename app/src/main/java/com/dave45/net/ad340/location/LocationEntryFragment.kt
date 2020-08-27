@@ -11,7 +11,6 @@ import com.dave45.net.ad340.Location
 import com.dave45.net.ad340.LocationRepository
 import com.dave45.net.ad340.R
 import com.dave45.net.ad340.databinding.FragmentLocationEntryBinding
-import kotlin.random.Random
 
 /**
  * A simple [Fragment] subclass.
@@ -30,10 +29,11 @@ class LocationEntryFragment : Fragment() {
 
         // Inflate the layout for this fragment
         binding = FragmentLocationEntryBinding.inflate(inflater, container, false)
-        val view = binding.root
 
         //update UI and get references
-        binding.zipcodeEditText.text.insert(0, List(5) { Random.nextInt(0,9) }.joinToString(""))
+        binding.zipcodeEditText.text.insert(0, "98101"
+        /**List(5) { Random.nextInt(0,9) }.joinToString("")*/
+            )
 
         binding.enterButton.setOnClickListener {
             val zipCode = binding.zipcodeEditText.text.toString()
@@ -47,6 +47,6 @@ class LocationEntryFragment : Fragment() {
 //                appNavigator.navigateToCurrentForecast(zipCode)
         }
 
-        return view
+        return binding.root
     }
 }

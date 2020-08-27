@@ -29,7 +29,7 @@ class LocationRepository(context: Context) {
 
     fun saveLocation(location: Location) {
         when(location) {
-            is Location.ZipCode -> preferences.edit().putString(KEY_ZIP_CODE, location.zipCode).apply()
+            is Location.ZipCode -> preferences.edit().putString(KEY_ZIP_CODE, location.zipCode).commit()
         }
     }
 
