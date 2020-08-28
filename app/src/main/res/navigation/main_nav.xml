@@ -36,6 +36,9 @@
         <argument
             android:name="iconId"
             app:argType="string" />
+        <argument
+            android:name="date"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/weeklyForecastFragment"

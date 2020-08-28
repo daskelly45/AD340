@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-private val DATE_FORMAT = SimpleDateFormat("MM-dd-yyyy")
+val DATE_FORMAT = SimpleDateFormat("MM-dd-yyyy")
 
 class DailyForecastViewHolder(
     view: View,
