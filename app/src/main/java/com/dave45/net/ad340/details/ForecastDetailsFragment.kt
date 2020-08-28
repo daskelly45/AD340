@@ -16,14 +16,17 @@ class ForecastDetailsFragment : Fragment() {
 
     private val args: ForecastDetailsFragmentArgs by navArgs()
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
-    private lateinit var binding: FragmentForecastDetailsBinding
+
+    private var _binding: FragmentForecastDetailsBinding? = null
+    // RThis property only valid between onCreateView and onDestroyView
+    private val binding: FragmentForecastDetailsBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentForecastDetailsBinding.inflate(inflater, container, false)
+        _binding = FragmentForecastDetailsBinding.inflate(inflater, container, false)
 
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
@@ -33,5 +36,11 @@ class ForecastDetailsFragment : Fragment() {
         binding.forecastIcon.load(formatIconIdToOpenWeatherIconUri(args.iconId))
 
         return binding.root
+    }
+
+    // Clean up _binding reference to ensure the _binding object is effectively removed from memory when the view is destroyed
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
