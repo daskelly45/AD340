@@ -16,7 +16,11 @@ import com.dave45.net.ad340.formatTempForDisplay
 class ForecastDetailsFragment : Fragment() {
 
     private val args: ForecastDetailsFragmentArgs by navArgs()
-    private val viewModel: ForecastDetailsViewModel by viewModels()
+
+    private lateinit var viewModelFactory: ForecastDetailsViewModelFactory
+    private val viewModel: ForecastDetailsViewModel by viewModels(
+        factoryProducer = { viewModelFactory }
+    )
 
     private var _binding: FragmentForecastDetailsBinding? = null
     // RThis property only valid between onCreateView and onDestroyView
@@ -30,6 +34,7 @@ class ForecastDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentForecastDetailsBinding.inflate(inflater, container, false)
+        viewModelFactory = ForecastDetailsViewModelFactory(args)
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
         return binding.root
     }
@@ -44,7 +49,6 @@ class ForecastDetailsFragment : Fragment() {
             binding.forecastIcon.load(viewState.iconUrl)
         }
         viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
-        viewModel.processArgs(args)
     }
 
     // Clean up _binding reference to ensure the _binding object is effectively removed from memory when the view is destroyed
