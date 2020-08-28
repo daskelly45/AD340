@@ -73,7 +73,7 @@ class WeeklyForecastFragment : Fragment() {
     private fun showForecastDetails(forecast: DailyForecast) {
         val temp = forecast.temp.max
         val description = forecast.weather.first().description
-        val action = WeeklyForecastFragmentDirections.actionWeeklyForecastFragmentToForecastDetailsFragment(temp, description)
+        val action = WeeklyForecastFragmentDirections.actionWeeklyForecastFragmentToForecastDetailsFragment(temp, description, forecast.weather.first().icon)
         findNavController().navigate(action)
     }
 

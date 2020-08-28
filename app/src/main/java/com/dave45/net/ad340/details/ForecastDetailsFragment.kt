@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import coil.load
 import com.dave45.net.ad340.TempDisplaySettingManager
 import com.dave45.net.ad340.databinding.FragmentForecastDetailsBinding
+import com.dave45.net.ad340.formatIconIdToOpenWeatherIconUri
 import com.dave45.net.ad340.formatTempForDisplay
 
 class ForecastDetailsFragment : Fragment() {
@@ -27,6 +29,8 @@ class ForecastDetailsFragment : Fragment() {
 
         binding.tempText.text = formatTempForDisplay(args.temp, tempDisplaySettingManager.getTempDisplaySetting())
         binding.descriptionText.text = args.description
+
+        binding.forecastIcon.load(formatIconIdToOpenWeatherIconUri(args.iconId))
 
         return binding.root
     }

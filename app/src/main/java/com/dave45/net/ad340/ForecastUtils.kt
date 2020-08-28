@@ -12,6 +12,8 @@ fun formatTempForDisplay(temp: Float, tempDisplaySetting: TempDisplaySetting) = 
     }
 }
 
+fun formatIconIdToOpenWeatherIconUri(iconId: String) = "http://openweathermap.org/img/wn/${iconId}@2x.png"
+
 fun showTempDisplaySettingDialog(context: Context, tempDisplaySettingManager: TempDisplaySettingManager) {
     val dialogBuilder = AlertDialog.Builder(context)
         .setTitle("Choose Display Units")

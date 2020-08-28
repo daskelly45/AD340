@@ -28,7 +28,7 @@ class DailyForecastViewHolder(
         binding.dateText.text = DATE_FORMAT.format(Date(dailyForecast.date * 1000))
 
         val iconId = dailyForecast.weather.first().icon
-        binding.forecastIcon.load("http://openweathermap.org/img/wn/${iconId}@2x.png")
+        binding.forecastIcon.load(formatIconIdToOpenWeatherIconUri(iconId))
     }
 }
 
