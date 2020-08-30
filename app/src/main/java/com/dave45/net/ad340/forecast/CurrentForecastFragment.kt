@@ -21,26 +21,31 @@ class CurrentForecastFragment : Fragment() {
     private val forecastRepository = ForecastRepository()
     private lateinit var locationRepository: LocationRepository
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
-    private lateinit var binding: FragmentCurrentForecastBinding
+
+    private var _binding: FragmentCurrentForecastBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
+        _binding = FragmentCurrentForecastBinding.inflate(inflater, container, false)
+
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
         val zipCode = arguments?.getString(KEY_ZIPCODE) ?: ""
-
-        // Inflate the layout for this fragment
-//        val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
-        binding = FragmentCurrentForecastBinding.inflate(inflater, container, false)
 
         binding.locationEntryButton.setOnClickListener {
             showLocationEntry()
         }
 
         val currentWeatherObserver = Observer<CurrentWeather> { weather ->
-            // update list adapter
+            binding.emptyText.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+            binding.locationName.visibility = View.VISIBLE
+            binding.tempText.visibility = View.VISIBLE
+
             binding.locationName.text = weather.name
             binding.tempText.text = formatTempForDisplay(weather.forecast.temp, tempDisplaySettingManager.getTempDisplaySetting())
         }
@@ -50,7 +55,10 @@ class CurrentForecastFragment : Fragment() {
         locationRepository = LocationRepository(requireContext())
         val savedLocationObserver = Observer<Location> { savedLocation ->
             when(savedLocation) {
-                is Location.ZipCode -> forecastRepository.loadCurrentForecast(savedLocation.zipCode)
+                is Location.ZipCode -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    forecastRepository.loadCurrentForecast(savedLocation.zipCode)
+                }
             }
         }
         locationRepository.savedLocation.observe(viewLifecycleOwner, savedLocationObserver)
@@ -61,6 +69,11 @@ class CurrentForecastFragment : Fragment() {
     private fun showLocationEntry() {
         val action = CurrentForecastFragmentDirections.actionCurrentForecastFragmentToLocationEntryFragment()
         findNavController().navigate(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

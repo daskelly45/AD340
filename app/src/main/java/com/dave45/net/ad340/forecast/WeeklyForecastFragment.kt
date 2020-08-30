@@ -23,18 +23,20 @@ class WeeklyForecastFragment : Fragment() {
     private val forecastRepository = ForecastRepository()
     private lateinit var locationRepository: LocationRepository
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
-    private lateinit var binding: FragmentWeeklyForecastBinding
+
+    private var _binding: FragmentWeeklyForecastBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
+        _binding = FragmentWeeklyForecastBinding.inflate(inflater, container, false)
+
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
         val zipCode = arguments?.getString(CurrentForecastFragment.KEY_ZIPCODE) ?: ""
-
-        // Inflate the layout for this fragment
-        binding = FragmentWeeklyForecastBinding.inflate(inflater, container, false)
 
         binding.locationEntryButton.setOnClickListener {
             showLocationEntry()
@@ -48,6 +50,9 @@ class WeeklyForecastFragment : Fragment() {
         forecastList.adapter = dailyForecastAdapter
 
         val weeklyForecastObserver = Observer<WeeklyForecast> { weeklyForecast ->
+            binding.emptyText.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+
             //update our list adapter
             dailyForecastAdapter.submitList(weeklyForecast.daily)
         }
@@ -57,7 +62,10 @@ class WeeklyForecastFragment : Fragment() {
         locationRepository = LocationRepository(requireContext())
         val savedLocationObserver = Observer<Location> { savedLocation ->
             when(savedLocation) {
-                is Location.ZipCode -> forecastRepository.loadWeeklyForecast(savedLocation.zipCode)
+                is Location.ZipCode -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    forecastRepository.loadWeeklyForecast(savedLocation.zipCode)
+                }
             }
         }
         locationRepository.savedLocation.observe(viewLifecycleOwner, savedLocationObserver)
@@ -75,6 +83,11 @@ class WeeklyForecastFragment : Fragment() {
         val description = forecast.weather.first().description
         val action = WeeklyForecastFragmentDirections.actionWeeklyForecastFragmentToForecastDetailsFragment(temp, description, forecast.weather.first().icon, forecast.date)
         findNavController().navigate(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
