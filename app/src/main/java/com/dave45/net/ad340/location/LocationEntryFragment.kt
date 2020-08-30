@@ -19,21 +19,23 @@ import com.dave45.net.ad340.databinding.FragmentLocationEntryBinding
 class LocationEntryFragment : Fragment() {
 
     private lateinit var locationRepository: LocationRepository
-    private lateinit var binding: FragmentLocationEntryBinding
+
+    private var _binding: FragmentLocationEntryBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
+        _binding = FragmentLocationEntryBinding.inflate(inflater, container, false)
+
         locationRepository = LocationRepository(requireContext())
 
-        // Inflate the layout for this fragment
-        binding = FragmentLocationEntryBinding.inflate(inflater, container, false)
-
         //update UI and get references
-        binding.zipcodeEditText.text.insert(0, "98101"
-        /**List(5) { Random.nextInt(0,9) }.joinToString("")*/
-            )
+//        binding.zipcodeEditText.text.insert(0, "98101"
+//        /**List(5) { Random.nextInt(0,9) }.joinToString("")*/
+//            )
 
         binding.enterButton.setOnClickListener {
             val zipCode = binding.zipcodeEditText.text.toString()
@@ -48,5 +50,10 @@ class LocationEntryFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
